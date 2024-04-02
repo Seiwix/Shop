@@ -1,20 +1,26 @@
-require('dotenv').config();
 const express = require('express'); 
-const mariadb = require('mariadb');
-
-
+const productRoutes = require('./routes/productRoutes');
+const path = require('path');
 const app = express(); 
+const PORT = 3000;
 
-const pool= mariadb.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    connectionLimit: 10
+app.use(express.json());
+app.use('/api/products', productRoutes);
+app.use(express.urlencoded({ extended: true }));
+
+//bilder public für das  Frontend 
+const publicPath = path.join(__dirname, './public/');
+app.use(express.static(publicPath));
+
+
+
+
+
+const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server on port ${PORT}`);
+server.on('error', (error) => {
+    console.error('Server error:', error);
 });
