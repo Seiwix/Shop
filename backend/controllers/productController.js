@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const Product = require('../models/productModel');
 
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -45,7 +46,7 @@ async function getProducts(req, res){
   }
 }
 async function getProductById(req, res) {
-  const id  = req.params;
+  const id = req.params;
   console.log(req.params);
   try {
     const product = await Product.getById(id);
@@ -56,13 +57,13 @@ async function getProductById(req, res) {
 }
 async function updateProduct(req,res){
   
-  const Id = req.params;
-  console.log(Id );
-  
+  const id = req.params;
+  console.log(id);
+  const product = await Product.getById(id);
+  console.log(product)
   console.log(req.body);
   try {
-    const product = await Product.getById(Id); 
-    console.log(product)
+    
     if (!product) {
       return res.status(404).json({ error: 'Produkt nicht gefunden' });
     }
@@ -81,7 +82,7 @@ async function updateProduct(req,res){
      product.description = description;
      product.price = price;
      product.stockQuantity = stockQuantity;
-     await product.update();
+     await product.update(id);
      res.status(200).json({ message: 'Produkt erfolgreich aktualisiert' });
   }
   catch (error) {
@@ -89,18 +90,28 @@ async function updateProduct(req,res){
   }
 }
 
-async function deleteProductImage(imgURL)
-{
-  const imgName = imgURL.split('/').pop()
-  console.log("beim  Löschen "+imgName);
-  const imgePaht = `public/${imageName}`;
-  if (fs.existsSync(imagePath)){
-    fs.unlinkSync(imagePath);
-    console.log("Bild wurde Gelöscht ");
+async function deleteProductImage(imgURL) {
+  console.log(imgURL);
+  const imgName = imgURL.split('/').pop();
+  console.log("beim Löschen " + imgName);
+  const imgPath = `public/${imgName}`;
+  console.log(imgPath);
+  if (fs.existsSync(imgPath)) {
+    fs.unlinkSync(imgPath);
+    console.log("Bild wurde gelöscht");
+  } else {
+    console.log("Bild konnte nicht gelöscht werden");
   }
-  else
-  {
-    console.log("bild konnte nicht gelöscht werden ");
+}
+
+async function deleteProduct(req, res) {
+  const id  = req.params;
+  console.log(req.params);
+  try {
+    const product = await Product.delete(id);
+    res.status(200).json({ product });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 }
 
@@ -109,5 +120,6 @@ module.exports = {
   addProduct: addProduct ,
   getProducts: getProducts,
   getProductById: getProductById,
-  updateProduct: updateProduct
+  updateProduct: updateProduct,
+  deleteProduct: deleteProduct
 };

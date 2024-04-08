@@ -50,10 +50,10 @@ class Product {
             throw new Error(`Fehler beim Abrufen der Produkte: ${error}`);
         }
     }
-    async update() {
+    async update(productid) {
         try {
             const db = await pool.getConnection();
-            await db.query('UPDATE products SET name = ?, description = ?, price = ?, stockQuantity = ?, imageUrl = ? WHERE id = ?', [this.name, this.description, this.price, this.stockQuantity, this.imageUrl, this.id]);
+            await db.query('UPDATE products SET name = ?, description = ?, price = ?, stockQuantity = ?, imageUrl = ? WHERE id = ?', [this.name, this.description, this.price, this.stockQuantity, this.imageUrl, productid.id]);
             db.release();
             return 'Produkt wurde aktualisiert';
         } catch (error) {
@@ -61,14 +61,15 @@ class Product {
         }
     }
 
-    async delete() {
+   static async delete(productid) {
         try {
             const db = await pool.getConnection();
-            await db.query('DELETE FROM products WHERE id = ?', [this.id]);
+           
+            await db.query('DELETE FROM products WHERE id = ?', [productid.id]);
             db.release();
-            return 'Produkt wurde gelöscht';
+            return 'Produkt wurde  gelöscht';
         } catch (error) {
-            throw new Error(`Fehler beim Löschen des Produktes: ${error}`);
+            throw new Error(`Fehler beim  Löschen des Produktes: ${error}`);
         }
     }
 

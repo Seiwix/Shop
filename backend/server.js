@@ -1,12 +1,15 @@
 const express = require('express'); 
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
+const bodyParser = require('body-parser')
 const path = require('path');
 const app = express(); 
 const PORT = 3000;
-
+app.use(bodyParser.json());
 app.use(express.json());
-app.use('/api/products', productRoutes);
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/products', productRoutes);
+app.use('/api/user',userRoutes);
 
 //bilder public für das  Frontend 
 const publicPath = path.join(__dirname, './public/');
