@@ -9,4 +9,5 @@ const pool = mariadb.createPool({
     connectionLimit: 10
 });
 
+
 module.exports = pool;
