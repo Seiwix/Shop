@@ -1,10 +1,14 @@
 const express = require('express'); 
+const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const bodyParser = require('body-parser')
 const path = require('path');
 const app = express(); 
 const PORT = 3000;
+
+
+app.use(cors()); // noch ändern nicht für alle 
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
