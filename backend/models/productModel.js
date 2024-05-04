@@ -40,6 +40,7 @@ class Product {
     }
 
     static async getAll(){
+        
         try{
             const db = await pool.getConnection();
             const datas = await  db.query('SELECT * FROM products');
