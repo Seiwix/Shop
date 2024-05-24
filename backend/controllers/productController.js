@@ -65,7 +65,7 @@ async function updateProduct(req,res){
   try {
     
     if (!product) {
-      return res.status(404).json({ error: 'Produkt nicht gefunden' });
+      return res.status(404).json({ error: 'Produkt nicht  gefunden' });
     }
     const { name, description, price, stockQuantity } = req.body;
     console.log(req.body);
@@ -83,7 +83,7 @@ async function updateProduct(req,res){
      product.price = price;
      product.stockQuantity = stockQuantity;
      await product.update(id);
-     res.status(200).json({ message: 'Produkt erfolgreich aktualisiert' });
+     res.status(200).json({ message: 'Produkt erfolgreich wurde   aktualisiert ' });
   }
   catch (error) {
     res.status(400).json({ error: error.message });

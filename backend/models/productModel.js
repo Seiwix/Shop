@@ -65,7 +65,7 @@ class Product {
    static async delete(productid) {
         try {
             const db = await pool.getConnection();
-           
+            await db.query('DELETE FROM comments WHERE productID = ?', [productid.id]); // müssen mit gelöscht werden da ein fremdschlüssel von product in kommentaren ist und man sonnst die Db voll müllen würde mit zu einen produkt welches nicht mehr exister 
             await db.query('DELETE FROM products WHERE id = ?', [productid.id]);
             db.release();
             return 'Produkt wurde  gelöscht';

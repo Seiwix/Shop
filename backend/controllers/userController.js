@@ -5,6 +5,7 @@ require('dotenv').config();
 
 async function register(req, res) {
     try {
+<<<<<<< Updated upstream
         const { username, email, password } = req.body;
         
         // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
@@ -20,6 +21,30 @@ async function register(req, res) {
     } catch (error) {
         // Fehlerhafte Antwort senden
         res.status(500).json({ error: error.message });
+=======
+<<<<<<< Updated upstream
+        const result = await user.register();
+        res.status(201).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+=======
+        const { username, email, password } = req.body;
+        
+        // Überprüfen, ob die E-Mail vorhanden ist 
+        const emailExists = await User.isEmailExists(email);
+        if (emailExists) {
+            return res.status(400).json({ error: 'Benutzer mit dieser e-Mail existiert bereits' });
+        }
+        const user = new User(username, email, password);
+        const registrationResult = await user.register();
+        const token = registrationResult.token;
+
+        res.status(201).json({ message: 'Benutzer wurde erfolgreich registriert', token});
+    } catch (error) {
+        
+        res.status(500).json({ error: error.message });
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
 }
 
