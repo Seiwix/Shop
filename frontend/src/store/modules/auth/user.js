@@ -1,17 +1,18 @@
 import jwt_decode from 'jwt-decode';
 
 const state = {
-  token: localStorage.getItem('jwtToken') || null
+  token: localStorage.getItem('jwtToken') || null,
+  userId: null,
+  userRole: null
 };
 
 const getters = {
   isLoggedIn: state => state.token !== null,
   user: state => {
-    if (state.token) {
-      return jwt_decode(state.token); 
-    } else {
-      return null;
-    }
+    return {
+      id: state.userId,
+      role: state.userRole
+    };
   }
 };
 
@@ -27,21 +28,18 @@ const actions = {
       });
       const data = await response.json();
       if (response.ok) {
-        commit('setUser', jwt_decode(data.token));
-        commit('setToken', data.token);
-        localStorage.setItem('jwtToken', data.token);
+        const decodedToken = jwt_decode(data.token);
+        commit('setUserDetails', { token: data.token, id: decodedToken.id, role: decodedToken.role });
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Login fehlgeschlagen:', error);
       throw error;
     }
   },
   logout({ commit }) {
-    commit('setUser', null);
-    commit('setToken', null);
-    localStorage.removeItem('jwtToken');
+    commit('clearUserData');
   },
   async register({ commit }, userData) {
     try {
@@ -54,25 +52,34 @@ const actions = {
       });
       const data = await response.json();
       if (response.ok) {
-        commit('setUser', jwt_decode(data.token)); 
-        commit('setToken', data.token); 
-        localStorage.setItem('jwtToken', data.token); 
+        const decodedToken = jwt_decode(data.token);
+        commit('setUserDetails', { token: data.token, id: decodedToken.id, role: decodedToken.role });
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('Registration fehlgeschlagen:', error);
       throw error;
     }
   },
 };
 
 const mutations = {
-  setUser(state, user) {
-    state.user = user;
-  },
-  setToken(state, token) {
+  setUserDetails(state, { token, id, role }) {
     state.token = token;
+    state.userId = id;
+    state.userRole = role;
+    localStorage.setItem('jwtToken', token);
+    localStorage.setItem('userId', id);
+    localStorage.setItem('userRole', role);
+  },
+  clearUserData(state) {
+    state.token = null;
+    state.userId = null;
+    state.userRole = null;
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
   }
 };
 
@@ -82,5 +89,3 @@ export default {
   actions,
   mutations
 };
-
-

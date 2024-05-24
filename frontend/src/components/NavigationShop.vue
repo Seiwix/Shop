@@ -1,10 +1,11 @@
 <template>
-  <header>
+  <header v-if="!isDashboardVisible">
     <nav>
-      <a class="logo"
-        ><router-link :to="'/'"
-          ><img src="@/assets/logo.png" alt="" /></router-link
-      ></a>
+      <a class="logo">
+        <router-link :to="'/'">
+          <img src="@/assets/logo.png" alt="" />
+        </router-link>
+      </a>
       <form @submit.prevent="searchProducts" class="search-form">
         <input
           v-model="searchQuery"
@@ -24,10 +25,7 @@
             </li>
           </ul>
         </div>
-        <div
-          v-if="showDropdown && searchResults.length === 0"
-          class="searchlist"
-        >
+        <div v-if="showDropdown && searchResults.length === 0" class="searchlist">
           <p>Nichts gefunden</p>
         </div>
       </form>
@@ -36,18 +34,20 @@
           <li>
             <a class="fas fa-user" @click="menu"></a>
             <menu :class="{ 'menu-visible': showMenu }">
-              <li class="li-drop"><a>Anmelden</a></li>
-              <li class="li-drop">
+              <li v-if="!isLoggedIn"><a></a>
+                <router-link :to="'/login'"><a>Anmelden</a></router-link>
+              </li>
+            
+              <li v-else @click="logout"><a>Logout</a></li>
+              <li v-if="!isLoggedIn" class="li-drop">
                 <router-link :to="'/register'"><a>Regsiter</a></router-link>
               </li>
             </menu>
           </li>
           <li>
-            <router-link :to="'/cart'"
-              ><a class="fas fa-shopping-cart">{{
-                cartItemCount
-              }}</a></router-link
-            >
+            <router-link :to="'/cart'">
+              <a class="fas fa-shopping-cart">{{ cartItemCount }}</a>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -57,22 +57,28 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   name: "NavigationShop",
   setup() {
+    const store = useStore();
+    const route = useRoute();
+    const isDashboardVisible = ref(false);
+
+    const cartItemCount = computed(() => store.getters.cartItemCount);
     const searchQuery = ref("");
     const showDropdown = ref(false);
     const showMenu = ref(false);
-    const store = useStore();
 
-    const cartItemCount = computed(() => store.getters.cartItemCount);
     const searchResults = computed(() => {
       return store.getters.getProducts.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
       );
     });
+
+    const isLoggedIn = computed(() => store.getters.isLoggedIn);
 
     const menu = () => {
       showMenu.value = !showMenu.value;
@@ -86,7 +92,16 @@ export default {
       showDropdown.value = searchQuery.value.length > 0;
     };
 
+    const logout = () => {
+      store.dispatch("logout");
+    };
+
+    watch(route, (to) => {
+      isDashboardVisible.value = to.path === "/dashboard";
+    });
+
     return {
+      isDashboardVisible,
       searchQuery,
       showDropdown,
       showMenu,
@@ -95,10 +110,13 @@ export default {
       handleInput,
       hideDropdown,
       menu,
+      isLoggedIn,
+      logout,
     };
   },
 };
 </script>
+
 
 
 

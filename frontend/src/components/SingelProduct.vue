@@ -16,44 +16,59 @@
         </div>
         <p>{{ product.description }}</p>
         <p>{{ product.price }}</p>
-        <label for="anzahl">Verfügbare Anzahl: {{ product.stockQuantity }}</label>
-        <select class="quantity" name="quantity" v-model="quantity">
-          <option v-for="qty in product.stockQuantity" :key="qty" :value="qty">{{ qty }}</option>
+        <label for="anzahl"
+          >Verfügbare Anzahl: {{ product.stockQuantity }}</label
+        >
+        <select class="quantity" name="quantity" v-model="selectedQuantity">
+          <option v-for="qty in availableQuantities" :key="qty" :value="qty">
+            {{ qty }}
+          </option>
         </select>
         <button @click="addToCart">In den Warenkorb</button>
+        <p v-if="selectedQuantity > product.stockQuantity">
+          Die gewählte Menge überschreitet die verfügbare Menge!
+        </p>
       </article>
     </section>
   </div>
 </template>
 
 <script>
-import { useStore } from 'vuex';
-import { ref } from 'vue';
+import { useStore } from "vuex";
+import { ref } from "vue";
 
 export default {
-  name:"SingelProduct",
-  // property kommt von der View (ProductView  und enthält ein einzelnes Produkt welches im Vux Store mit getsingleProduct aufgrufen wird)
-  props: [ 'product'],
+  name: "SingelProduct",
+  props: ["product"],
   setup(props) {
-    // Mit useStore  wird der VueX store aufgerufen  Ref ist in vue3 wie in vue2 in der Otional  api  Data , dies wird  verwendet um startwerte oder werte 
     const store = useStore();
-    const quantity = ref(1);
+    const selectedQuantity = ref(1);
+    const availableQuantities = Array.from(
+      { length: props.product.stockQuantity },
+      (_, index) => index + 1
+    );
 
     const addToCart = () => {
-      const { id, name, price, imageUrl } = props.product;
-      const cartItem = {
-        id,
-        name,
-        price,
-        imageUrl,
-        quantity: quantity.value
-      };
-      store.dispatch("addCartItem", cartItem);
+      if (selectedQuantity.value <= props.product.stockQuantity) {
+        const { id, name, price, imageUrl, stockQuantity } = props.product;
+        const cartItem = {
+          id,
+          name,
+          price,
+          imageUrl,
+          quantity: selectedQuantity.value,
+          stockQuantity, // ist die verfügbare Menge des Produktes, dass der Korb nicht mehr Produkte hat als überhaupt im Lager sind
+        };
+        store.dispatch("addCartItem", cartItem);
+      } else {
+        console.log("Die gewählte Menge  ist nicht verfügbar");
+      }
     };
 
     return {
-      quantity,
-      addToCart
+      selectedQuantity,
+      addToCart,
+      availableQuantities,
     };
   },
 };

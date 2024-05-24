@@ -6,7 +6,13 @@
         <h3>{{ item.name }}</h3>
         <p>
           <select class="dropdown" v-model="item.quantity">
-            <option v-for="quantity in getAvailableQuantities(item.quantity)" :key="quantity" :value="quantity">{{ quantity }}</option>
+            <option
+              v-for="quantity in getAvailableQuantities(item)"
+              :key="quantity"
+              :value="quantity"
+            >
+              {{ quantity }}
+            </option>
           </select>
         </p>
         <p>{{ item.price }}€</p>
@@ -17,53 +23,53 @@
 </template>
 
 <script>
-
-
 export default {
-  name: 'ShowCart',
+  name: "ShowCart",
   props: {
     cartItems: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props, { emit }) {
-    const getAvailableQuantities = (stockQuantity) => {
-      return Array.from({ length: stockQuantity }, (_, index) => index + 1);
+    const getAvailableQuantities = (item) => {
+      return Array.from(
+        { length: item.stockQuantity },
+        (_, index) => index + 1
+      );
     };
 
     const removeFromCart = (item) => {
-      emit('removeCartItem', item); 
+      emit("removeCartItem", item);
     };
 
     return {
       getAvailableQuantities,
-      removeFromCart
+      removeFromCart,
     };
-  }
+  },
 };
 </script>
-
 <style lang="scss" scoped>
-article{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
+article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 
-    img{
-        max-width: 100px;
-        max-height: 100px;
-        margin-right: 20px;
-    }
-    .dropdown{
-        width: 80px;
-        font-size: 16px;
-    }
-    button{
-      background-color: red;
-    }
+  img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 20px;
+  }
+  .dropdown {
+    width: 80px;
+    font-size: 16px;
+  }
+  button {
+    background-color: red;
+  }
 }
 </style>
