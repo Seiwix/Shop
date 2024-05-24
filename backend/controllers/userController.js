@@ -7,10 +7,10 @@ async function register(req, res) {
     try {
         const { username, email, password } = req.body;
         
-        // Überprüfen, ob die E-Mail-Adresse bereits vorhanden ist
+        // Überprüfen, ob die E-Mail vorhanden ist 
         const emailExists = await User.isEmailExists(email);
         if (emailExists) {
-            return res.status(400).json({ error: 'Benutzer mit dieser E-Mail-Adresse existiert bereits' });
+            return res.status(400).json({ error: 'Benutzer mit dieser e-Mail existiert bereits' });
         }
         const user = new User(username, email, password);
         const registrationResult = await user.register();
@@ -18,7 +18,7 @@ async function register(req, res) {
 
         res.status(201).json({ message: 'Benutzer wurde erfolgreich registriert', token});
     } catch (error) {
-        // Fehlerhafte Antwort senden
+        
         res.status(500).json({ error: error.message });
     }
 }

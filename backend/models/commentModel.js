@@ -16,7 +16,11 @@ class Commants {
             if (result && result.insertId) {
                 this.comment_id = Number(result.insertId);
                 db.release();
+<<<<<<< Updated upstream
                 return "Bewertung erfolgreich gespeichert";
+=======
+                return "Bewertung wurde erfolgreich gespeichert";
+>>>>>>> Stashed changes
             } else {
                 throw new Error('Bewertung konnte nicht gespeichert werden');
             }
@@ -32,7 +36,11 @@ class Commants {
             console.log(result);
             return result;
         } catch (error) {
+<<<<<<< Updated upstream
             throw new Error(`Fehler beim Abrufen der Bewertungen für das Produkt: ${error}`);
+=======
+            throw new Error(`Fehler beim Abrufen der Bewrtungen für das Produkt ${error}`);
+>>>>>>> Stashed changes
         }
     }
     static async getAverageRatingForProduct(productID) {
