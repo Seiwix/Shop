@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import Navigation from '@/components/NavigationShop.vue'; // Stelle sicher, dass der Pfad zu deiner Navigationskomponente korrekt ist
+import Navigation from '@/components/NavigationShop.vue'; 
 
 
 export default {
   components: {
     Navigation,
-    
   },
 
 }
 </script>
-<style>
-* {
+<style >
+
+*{
             margin: 0px;
  } 
 
