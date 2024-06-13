@@ -3,7 +3,8 @@ const cors = require('cors');
 const crypto = require('crypto');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
-const commantRoutes= require('./routes/commantRoutes')
+const commantRoutes= require('./routes/commantRoutes');
+const checkoutRoutes = require('./routes/checkoutRoutes');
 const bodyParser = require('body-parser')
 const path = require('path');
 const app = express(); 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/products', productRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/comments',commantRoutes);
+app.use('/api/checkout',checkoutRoutes);
 
 //bilder public für das  Frontend 
 const publicPath = path.join(__dirname, './public/');

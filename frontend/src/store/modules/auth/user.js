@@ -2,8 +2,8 @@ import jwt_decode from 'jwt-decode';
 
 const state = {
   token: localStorage.getItem('jwtToken') || null,
-  userId: null,
-  userRole: null
+  userId: localStorage.getItem('userId') || null,
+  userRole: localStorage.getItem('userRole') || null
 };
 
 const getters = {

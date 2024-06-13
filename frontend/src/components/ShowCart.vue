@@ -22,32 +22,26 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "ShowCart",
-  props: {
-    cartItems: {
-      type: Array,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const getAvailableQuantities = (item) => {
-      return Array.from(
-        { length: item.stockQuantity },
-        (_, index) => index + 1
-      );
-    };
+<script setup>
 
-    const removeFromCart = (item) => {
-      emit("removeCartItem", item);
-    };
-
-    return {
-      getAvailableQuantities,
-      removeFromCart,
-    };
+ defineProps({
+  cartItems: {
+    type: Array,
+    required: true,
   },
+});
+
+const emit = defineEmits('removeCartItem');
+
+const getAvailableQuantities = (item) => {
+  return Array.from(
+    { length: item.stockQuantity },
+    (_, index) => index + 1
+  );
+};
+
+const removeFromCart = (item) => {
+  emit("removeCartItem", item);
 };
 </script>
 <style lang="scss" scoped>

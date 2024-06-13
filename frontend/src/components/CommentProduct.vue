@@ -34,53 +34,44 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script setup>
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
-export default {
-  name: "commentProduct",
-  setup(_, context) {
-    const store = useStore();
-    const route = useRoute();
-    const isLoggedIn = computed(() => store.getters.isLoggedIn);
-    const commentText = ref("");
-    const selectedStar = ref(0);
 
-    const submitForm = async () => {
-      if (selectedStar.value === 0) {
-        return;
-      }
+const emit = defineEmits(['commentAdded']);
 
-      if (!commentText.value.trim()) {
-        return;
-      }
+const store = useStore();
+const route = useRoute();
+const isLoggedIn = computed(() => store.getters.isLoggedIn);
+const commentText = ref("");
+const selectedStar = ref(0);
 
-      const productId = route.params.id;
+const submitForm = async () => {
+  if (selectedStar.value === 0) {
+    return;
+  }
 
-      const comment = commentText.value.trim();
-      const star = selectedStar.value;
+  if (!commentText.value.trim()) {
+    return;
+  }
 
-      await store.dispatch("addComment", { productId, comment, star });
+  const productId = route.params.id;
 
-      resetForm();
-      context.emit("commentAdded");
-    };
+  const comment = commentText.value.trim();
+  const star = selectedStar.value;
 
-    const resetForm = () => {
-      selectedStar.value = 0;
-      commentText.value = "";
-    };
+  await store.dispatch("addComment", { productId, comment, star });
 
-    return {
-      isLoggedIn,
-      submitForm,
-      commentText,
-      selectedStar,
-    };
-  },
+  resetForm();
+  emit("commentAdded");
+};
+
+const resetForm = () => {
+  selectedStar.value = 0;
+  commentText.value = "";
 };
 </script>
   

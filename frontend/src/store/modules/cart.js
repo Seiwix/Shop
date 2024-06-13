@@ -32,6 +32,7 @@ const actions = {
 
 const mutations = {
     addCartItem(state, payload) {
+        console.log(payload)
         const existingItemIndex = state.cartItems.findIndex(item => item.id === payload.id);
         if (existingItemIndex !== -1) {
             const newQuantity = state.cartItems[existingItemIndex].quantity + payload.quantity;

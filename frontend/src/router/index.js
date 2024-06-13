@@ -8,7 +8,10 @@ import CartView from '../views/CartView.vue';
 import DahsbordView from '../views/DashbordViwe.vue';
 import RegisterUser from '@/components/Auth/RegisterUser.vue';
 import LoginUser from '@/components/Auth/LoginUser.vue';
+import Checkout from '../views/CheckoutView.vue';
 import store from '@/store';
+import  ProductListDashboard from '@/components/Dashboard/ProductListDachboard.vue';
+import  OrdersDashboard from '@/components/Dashboard/OrdersList.vue';
 
 const routes = [{
     path: '/',
@@ -36,12 +39,20 @@ const routes = [{
     component: LoginUser
   },
   {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout
+  },
+  {
     path: '/dashboard',
-    name: 'DahsbordView',
     component: DahsbordView,
-    meta: {
-      requiresAdmin: true
-    }
+    meta: { requiresAdmin: true },
+    children: [
+      
+      { path: 'products', name: 'DashboardProducts', component: ProductListDashboard },
+      { path: 'orders', name: 'DashboardOrders', component: OrdersDashboard },
+     
+    ]
   }
 ];
 
@@ -53,7 +64,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAdmin) {
-    console.log(store.getters.user.role)
+    console.log(store.getters.role)
     const userRole = store.getters.user.role;
     console.log(userRole);
     if (userRole === 'admin') {

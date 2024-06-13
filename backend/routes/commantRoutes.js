@@ -5,6 +5,8 @@ const auth = require('../middleware/authMiddleware');
 //auth.verifyToken
 router.post('/', commentController.addComment);
 router.get('/:id',commentController.getCommentsForProduct);
+router.put('/:id', commentController.updateComment); 
+router.delete('/', commentController.deleteComment); 
 router.get('/star/:id',commentController.getAverageRatingForProduct);
 router.get('/stars/:id',commentController.getRatingDistributionForProduct);
 

@@ -5,13 +5,13 @@
       <button @click="openAddModal">Produkt Hinzufügen</button>
     </div>
     <section>
-      <article class="produkt" v-for="product in products" :key="product.id">
-        <img class="produktbild" :src="product.imageUrl" :alt="product.name">
-        <h2>{{ product.name }}</h2>
-        <p>Preis: {{ product.price }}</p>
+      <article class="produkt" v-for="products in product" :key="products.id">
+        <img class="produktbild" :src="products.imageUrl" :alt="products.name">
+        <h2>{{ products.name }}</h2>
+        <p>Preis: {{ products.price }}</p>
         <div>
-          <button class="delete-button" @click="deleteProduct(product.id)">Löschen</button>
-          <button @click="openUpdateModal(product.id)">Updaten</button>
+          <button class="delete-button" @click="deleteProduct(products.id)">Löschen</button>
+          <button @click="openUpdateModal(products.id)">Updaten</button>
         </div>
       </article>
     </section>
@@ -40,12 +40,17 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed ,onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   name: 'ProductListDashboard',
   setup() {
+   const product = computed(() => store.state.products.products);
+
+    onMounted(() => {
+      store.dispatch("fetchProducts");
+    }); 
     const showModal = ref(false);
     const isUpdating = ref(false);
     const currentProductId = ref(null);
@@ -159,6 +164,7 @@ export default {
       openAddModal,
       openUpdateModal,
       onFileChange,
+      product,
     };
   },
 };

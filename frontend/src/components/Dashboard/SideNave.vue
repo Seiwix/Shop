@@ -1,17 +1,13 @@
 <template>
   <nav>
     <ul>
-      <li>
+      <li @click="changeView('products')">
         <i class="fas fa-box"></i>
         <span>Produkte</span>
       </li>
-      <li>
+      <li @click="changeView('orders')">
         <i class="fas fa-user"></i>
-        <span>Kunden</span>
-      </li>
-      <li>
-        <i class="fas fa-wallet"></i>
-        <span>Umsatz</span>
+        <span>Bestellungen</span>
       </li>
       <li>
         <a href="#" class="logout" @click="logout">
@@ -24,27 +20,31 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'; 
-import { useStore } from 'vuex'; 
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default {
-  name: 'SideNav',
+  name: 'SideNave',
   setup() {
-    const router = useRouter(); 
-    const store = useStore(); 
+    const router = useRouter();
+    const store = useStore();
+
+    const changeView = (view) => {
+      router.push(`/dashboard/${view}`);
+    };
 
     const logout = () => {
-      store.dispatch('logout'); 
-      router.push('/'); 
+      store.dispatch('logout');
+      router.push('/');
     };
 
     return {
+      changeView,
       logout
     };
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 

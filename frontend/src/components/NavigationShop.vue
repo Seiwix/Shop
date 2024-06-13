@@ -25,7 +25,10 @@
             </li>
           </ul>
         </div>
-        <div v-if="showDropdown && searchResults.length === 0" class="searchlist">
+        <div
+          v-if="showDropdown && searchResults.length === 0"
+          class="searchlist"
+        >
           <p>Nichts gefunden</p>
         </div>
       </form>
@@ -34,10 +37,11 @@
           <li>
             <a class="fas fa-user" @click="menu"></a>
             <menu :class="{ 'menu-visible': showMenu }">
-              <li v-if="!isLoggedIn"><a></a>
+              <li v-if="!isLoggedIn">
+                <a></a>
                 <router-link :to="'/login'"><a>Anmelden</a></router-link>
               </li>
-            
+
               <li v-else @click="logout"><a>Logout</a></li>
               <li v-if="!isLoggedIn" class="li-drop">
                 <router-link :to="'/register'"><a>Regsiter</a></router-link>
@@ -55,66 +59,47 @@
   </header>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "vuex";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-export default {
-  name: "NavigationShop",
-  setup() {
-    const store = useStore();
-    const route = useRoute();
-    const isDashboardVisible = ref(false);
+const store = useStore();
+const route = useRoute();
+const isDashboardVisible = ref(false);
 
-    const cartItemCount = computed(() => store.getters.cartItemCount);
-    const searchQuery = ref("");
-    const showDropdown = ref(false);
-    const showMenu = ref(false);
+const cartItemCount = computed(() => store.getters.cartItemCount);
+const searchQuery = ref("");
+const showDropdown = ref(false);
+const showMenu = ref(false);
 
-    const searchResults = computed(() => {
-      return store.getters.getProducts.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      );
-    });
+const searchResults = computed(() => {
+  return store.getters.getProducts.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
-    const isLoggedIn = computed(() => store.getters.isLoggedIn);
+const isLoggedIn = computed(() => store.getters.isLoggedIn);
 
-    const menu = () => {
-      showMenu.value = !showMenu.value;
-    };
-
-    const hideDropdown = () => {
-      showDropdown.value = false;
-    };
-
-    const handleInput = () => {
-      showDropdown.value = searchQuery.value.length > 0;
-    };
-
-    const logout = () => {
-      store.dispatch("logout");
-    };
-
-    watch(route, (to) => {
-      isDashboardVisible.value = to.path === "/dashboard";
-    });
-
-    return {
-      isDashboardVisible,
-      searchQuery,
-      showDropdown,
-      showMenu,
-      cartItemCount,
-      searchResults,
-      handleInput,
-      hideDropdown,
-      menu,
-      isLoggedIn,
-      logout,
-    };
-  },
+const menu = () => {
+  showMenu.value = !showMenu.value;
 };
+
+const hideDropdown = () => {
+  showDropdown.value = false;
+};
+
+const handleInput = () => {
+  showDropdown.value = searchQuery.value.length > 0;
+};
+
+const logout = () => {
+  store.dispatch("logout");
+};
+
+watch(route, (to) => {
+  isDashboardVisible.value = to.path.startsWith("/dashboard");
+});
 </script>
 
 
@@ -126,6 +111,9 @@ header {
   position: fixed;
   top: 0;
   left: 0;
+}
+.fas {
+  color: white;
 }
 nav {
   display: flex;
@@ -182,7 +170,8 @@ nav {
         font-size: 20px;
         list-style: none;
         padding: 20px;
-      }
+        text-decoration: none;
+      } 
     }
   }
 }
@@ -220,6 +209,11 @@ menu {
   border-radius: 20px;
   margin-top: 5px;
   display: none;
+  text-decoration: none;
+  a{
+    text-decoration: none;
+    color: black;
+  }
 }
 .menu-visible {
   display: block;

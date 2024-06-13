@@ -36,18 +36,17 @@
   </main>
 </template>
 
-<script>
-import { useStore } from "vuex";
+<script setup >
+import { useStore} from "vuex";
 
-export default {
-  name: "ProductList",
-  props: {
+
+  defineProps( {
     products: {
       type: Array,
       required: true,
     },
-  },
-  setup() {
+  });
+
     const store = useStore();
 
     const addToCart = (product) => {
@@ -85,14 +84,7 @@ export default {
       return stars;
     };
 
-    return {
-      addToCart,
-      shortText,
-      isTextShorted,
-      getStars,
-    };
-  },
-};
+
 </script>
 <style scoped lang="scss">
 main {
@@ -105,72 +97,76 @@ main {
   text-decoration: none;
   color: black;
 }
+
 .rout {
   text-decoration: none;
   color: black;
 }
+
 article {
   padding: 20px;
   border: 1px solid #ccc;
-  background-color: gray;
+  background-color: whitesmoke;
   width: auto;
   margin: auto;
-  min-width: 300px;
-  max-width: 300px;
   display: flex;
   flex-direction: column;
   text-align: center;
   border-radius: 10%;
-  .product-description {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  h2 {
-    font-weight: bold;
-    font-size: 25px;
-    margin-bottom: 5px;
-  }
+}
 
-  img {
-    margin-bottom: 5px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    border: blue 1px solid;
-  }
+.product-description {
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+h2 {
+  font-family: 'Roboto';
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
 
-  .rating {
-    color: gold;
+img {
+  margin-bottom: 5px;
+  width: 100%;
+  height: 200px; 
+  object-fit: cover;
+  object-position: center;
+  border: blue 1px solid;
+}
 
-    > a {
-      color: black;
-    }
-  }
+p {
+  font-family: 'Roboto';
+  font-size: 1em;
+}
 
-  > a {
-    margin-top: 20px;
-    font-size: 25px;
-    margin-bottom: 10px;
-  }
+.rating {
+  color: gold;
+  font-size: 1em;
 
-  .btn-box {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    .btn {
-      width: 100px;
-      background-color: goldenrod;
-      font-size: 15px;
-    }
-    .btn2 {
-      width: 100px;
-      background-color: gray;
-      font-size: 15px;
-    }
+  a {
+    color: black;
+    font-family: 'Roboto';
+    font-size: 1em;
   }
 }
+
+ a {
+  margin-top: 20px;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.btn-box {
+  margin-top: 10px;
+  .btn {
+    width: 100px;
+    background-color: goldenrod;
+    border-radius: 10%;
+    border: none;
+    font-size: 1em;
+  }
+}
+
 @media (max-width: 768px) {
   main {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

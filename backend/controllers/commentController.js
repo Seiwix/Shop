@@ -9,7 +9,6 @@ async function addComment(req, res) {
         starRating
     } = req.body;
 
-    console.log(req.body);
     try {
         const user = await User.findById(userID);
         const comment = new Commants(userID, productID, commentText, starRating, user.username);
@@ -24,8 +23,39 @@ async function addComment(req, res) {
     }
 }
 
+async function updateComment(req, res) {
+    console.log(req.body);
+    const { userID, commentID, commentText, starRating } = req.body;
+    
+    try {
+        const updatedComment = await Commants.updateComment(userID, commentID, commentText, starRating);
+        res.status(200).json(updatedComment);
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+async function deleteComment(req, res) {
+    const {
+        userID,
+        comment_id
+    } = req.body;
+    console.log(req.body);
+    try {
+        const result = await Commants.deleteCommant(userID, comment_id);
+        res.status(200).json({
+            message: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 async function getCommentsForProduct(req, res) {
-    console.log(req.params);
     const {
         id
     } = req.params;
@@ -41,8 +71,8 @@ async function getCommentsForProduct(req, res) {
         });
     }
 }
+
 async function getAverageRatingForProduct(req, res) {
-    console.log(req.params);
     const {
         id
     } = req.params;
@@ -58,14 +88,13 @@ async function getAverageRatingForProduct(req, res) {
         });
     }
 }
+
 async function getRatingDistributionForProduct(req, res) {
     const {
         id
     } = req.params;
 
     try {
-
-
         const {
             ratingDistribution,
             totalRatings
@@ -88,6 +117,8 @@ async function getRatingDistributionForProduct(req, res) {
 
 module.exports = {
     addComment: addComment,
+    updateComment: updateComment,
+    deleteComment: deleteComment,
     getCommentsForProduct: getCommentsForProduct,
     getAverageRatingForProduct: getAverageRatingForProduct,
     getRatingDistributionForProduct: getRatingDistributionForProduct,

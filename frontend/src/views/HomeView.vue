@@ -7,17 +7,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import ProductList from "@/components/ProductList.vue";
 
-export default {
-  name: "HomeView",
-  components: {
-    ProductList,
-  },
-  setup() {
+
     const store = useStore();
     const loading = ref(true);
     const products = computed(() => store.state.products.products);
@@ -45,21 +40,11 @@ export default {
       }
     });
 
-    return {
-      productsWithRatings,
-      loading,
-    };
-  },
-};
 </script>
 
 <style scoped>
 .home {
   margin-top: 150px;
-}
-</style>
-<style scoped >
-.home {
-  margin-top: 150px;
+  background-color: white;
 }
 </style>
