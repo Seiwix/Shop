@@ -13,6 +13,7 @@
             {{ shortText(product.description) }}
           </p>
           <router-link
+            class="shortText"
             v-if="isTextShorted(product.description)"
             :to="'/product/' + product.id"
             >Erfahren Sie mehr...</router-link
@@ -24,6 +25,7 @@
             :key="index"
             :class="star"
           ></i>
+          <label>{{ product.numberOfComments }}</label>
         </div>
         <a class="price">{{ product.price }}€</a>
       </router-link>
@@ -37,54 +39,51 @@
 </template>
 
 <script setup >
-import { useStore} from "vuex";
+import { useStore } from "vuex";
 
+defineProps({
+  products: {
+    type: Array,
+    required: true,
+  },
+});
 
-  defineProps( {
-    products: {
-      type: Array,
-      required: true,
-    },
-  });
+const store = useStore();
 
-    const store = useStore();
+const addToCart = (product) => {
+  const { id, name, price, imageUrl, stockQuantity } = product;
+  const cartItem = {
+    id,
+    name,
+    price,
+    imageUrl,
+    quantity: 1,
+    stockQuantity,
+  };
+  store.dispatch("addCartItem", cartItem);
+};
 
-    const addToCart = (product) => {
-      const { id, name, price, imageUrl, stockQuantity } = product;
-      const cartItem = {
-        id,
-        name,
-        price,
-        imageUrl,
-        quantity: 1,
-        stockQuantity,
-      };
-      store.dispatch("addCartItem", cartItem);
-    };
+const shortText = (text, length = 50) => {
+  return text.length > length ? text.slice(0, length) + "..." : text;
+};
 
-    const shortText = (text, length = 50) => {
-      return text.length > length ? text.slice(0, length) + "..." : text;
-    };
+const isTextShorted = (text, length = 100) => {
+  return text.length > length;
+};
 
-    const isTextShorted = (text, length = 100) => {
-      return text.length > length;
-    };
-
-    const getStars = (averageStar) => {
-      let stars = [];
-      for (let i = 0; i < Math.floor(averageStar); i++) {
-        stars.push("fas fa-star");
-      }
-      if (averageStar % 1 !== 0) {
-        stars.push("fas fa-star-half-alt");
-      }
-      while (stars.length < 5) {
-        stars.push("far fa-star");
-      }
-      return stars;
-    };
-
-
+const getStars = (averageStar) => {
+  let stars = [];
+  for (let i = 0; i < Math.floor(averageStar); i++) {
+    stars.push("fas fa-star");
+  }
+  if (averageStar % 1 !== 0) {
+    stars.push("fas fa-star-half-alt");
+  }
+  while (stars.length < 5) {
+    stars.push("far fa-star");
+  }
+  return stars;
+};
 </script>
 <style scoped lang="scss">
 main {
@@ -101,6 +100,10 @@ main {
 .rout {
   text-decoration: none;
   color: black;
+}
+.shortText {
+  color: black;
+  font-size: 13px;
 }
 
 article {
@@ -120,7 +123,7 @@ article {
   margin-bottom: 5px;
 }
 h2 {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-size: 1.2em;
   margin-bottom: 5px;
 }
@@ -128,14 +131,13 @@ h2 {
 img {
   margin-bottom: 5px;
   width: 100%;
-  height: 200px; 
+  height: 200px;
   object-fit: cover;
   object-position: center;
-  border: blue 1px solid;
 }
 
 p {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-size: 1em;
 }
 
@@ -145,12 +147,12 @@ p {
 
   a {
     color: black;
-    font-family: 'Roboto';
+    font-family: "Roboto";
     font-size: 1em;
   }
 }
 
- a {
+a {
   margin-top: 20px;
   font-size: 1.2em;
   margin-bottom: 10px;

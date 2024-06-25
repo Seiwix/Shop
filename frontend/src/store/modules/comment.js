@@ -47,7 +47,7 @@ const actions = {
         averageStar: avgRating,
       });
     } catch (error) {
-      console.error("Fehler beim fetchen der durchschnittlichen Sterne:", error);
+      console.error(error);
     }
   },
   async addComment({ commit }, { productId, comment, star }) {
@@ -63,7 +63,7 @@ const actions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify(commentData),
       });
@@ -75,19 +75,25 @@ const actions = {
   },
   async updateComment({ commit }, { userID, commentID, commentText, starRating }) {
     try {
-      console.log(userID, commentID, commentText, starRating);
+
       const response = await fetch(`http://localhost:3000/api/comments/${commentID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`
         },
         body: JSON.stringify({ userID, commentID, commentText, starRating }),
       });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       const updatedComment = await response.json();
       console.log(updatedComment);
       commit('updateComment', updatedComment);
     } catch (error) {
-      console.error('Fehler beim Aktualisieren des Kommentars:', error);
+      console.error( error);
     }
   },
   async deleteComment({ commit }, { comment_id, userID }) {
@@ -97,13 +103,14 @@ const actions = {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify({ comment_id, userID }),
       });
       const { commentID } = await response.json();
       commit('deleteComment', commentID);
     } catch (error) {
-      console.error('Fehler beim Löschen des Kommentars:', error);
+      console.error(error);
     }
   },
 };
@@ -113,6 +120,10 @@ const getters = {
   getAverageStar: (state) => (productId) => {
     return state.averageStar[productId] || 0;
   },
+  getNumberOfComments: state => (productId) => {
+    const comments = state.comments.filter(comment => comment.productID === productId);
+    return comments.length;
+  } 
 };
 
 export default {

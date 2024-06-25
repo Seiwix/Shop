@@ -11,9 +11,12 @@ async function addComment(req, res) {
 
     try {
         const user = await User.findById(userID);
+
         const comment = new Commants(userID, productID, commentText, starRating, user.username);
+
         const result = await comment.addCommant();
         res.status(201).json({
+
             message: result
         });
     } catch (error) {
@@ -24,9 +27,13 @@ async function addComment(req, res) {
 }
 
 async function updateComment(req, res) {
-    console.log(req.body);
-    const { userID, commentID, commentText, starRating } = req.body;
-    
+    const {
+        userID,
+        commentID,
+        commentText,
+        starRating
+    } = req.body;
+
     try {
         const updatedComment = await Commants.updateComment(userID, commentID, commentText, starRating);
         res.status(200).json(updatedComment);
@@ -42,7 +49,6 @@ async function deleteComment(req, res) {
         userID,
         comment_id
     } = req.body;
-    console.log(req.body);
     try {
         const result = await Commants.deleteCommant(userID, comment_id);
         res.status(200).json({

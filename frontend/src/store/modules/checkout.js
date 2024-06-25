@@ -7,41 +7,83 @@ const getters = {
 };
 
 const mutations = {
-  SET_CHECKOUTS(state, checkouts) {
+ setCheckouts(state, checkouts) {
     state.checkouts = checkouts;
   },
-  ADD_CHECKOUT(state, checkout) {
+ addCheckout(state, checkout) {
     state.checkouts.push(checkout);
   },
 };
 
 const actions = {
-  async createCheckout({ commit }, checkoutData) {
+  async createCheckout({
+    commit
+  }, checkoutData) {
     try {
       const response = await fetch('http://localhost:3000/api/checkout/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify(checkoutData),
       });
       if (response.status === 201) {
-        commit('ADD_CHECKOUT', checkoutData);
-        return { message: 'Checkout erfolgreich abgeschlossen' };
+        commit('addCheckout', checkoutData);
+        return {
+          message: 'checkout erfolgrereich abgeschlossen'
+        };
       }
     } catch (error) {
-      return { message: `Fehler beim Erstellen des Checkouts: ${error.message}` };
+      return {
+        message: `fehler beim erstellen des Checkoutes: ${error.message}`
+      };
     }
   },
-  async fetchAllCheckouts({ commit }) {
+  async fetchAllCheckouts({
+    commit
+  }) {
     try {
-      const response = await fetch('http://localhost:3000/api/checkout/');
+      const response = await fetch('http://localhost:3000/api/checkout/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Response nicht ok');
+      }
+
       const data = await response.json();
-      commit('SET_CHECKOUTS', data);
+      commit('setCheckouts', data);
     } catch (error) {
       console.error(`Fehler beim Abrufen der Checkouts: ${error.message}`);
     }
   },
+  async fetchCheckoutsByUserID({
+    commit
+  }, payload) {
+    try {
+      const response = await fetch(`http://localhost:3000/api/checkout/${payload.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Netzwerk Fehler');
+      }
+
+      const data = await response.json();
+      commit('setCheckouts', data);
+    } catch (error) {
+      console.error(`fehler beim beim Abrufen des Checkouts${error.message}`);
+    }
+  }
 };
 
 export default {

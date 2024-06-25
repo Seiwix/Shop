@@ -10,7 +10,7 @@
         <span>Bestellungen</span>
       </li>
       <li>
-        <a href="#" class="logout" @click="logout">
+        <a class="logout" @click="logout">
           <i class="fas fa-sign-out-alt"></i>
           <span>Log out</span>
         </a>
@@ -80,9 +80,8 @@ nav{
   .logout{
   position: absolute;
   bottom: 0;
+  cursor: pointer;
   }
-
+  
 }
-
-
 </style>

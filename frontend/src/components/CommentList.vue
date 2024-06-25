@@ -1,10 +1,14 @@
 <template>
-  <div>
-    <div class="reviews-container" v-for="(comment, index) in comments" :key="index">
+  <div class="container">
+    <div
+      class="reviewsContainer"
+      v-for="(comment, index) in comments"
+      :key="index"
+    >
       <div class="review">
-        <div class="review-header">
-          <span class="review-date">{{ formatDate(comment.commentDate) }}</span>
-          <div class="review-stars">
+        <div class="reviewHeader">
+          <span class="reviewDate">{{ formatDate(comment.commentDate) }}</span>
+          <div class="reviewStars">
             <i
               v-for="n in 5"
               :class="{
@@ -14,9 +18,21 @@
               :key="n"
             ></i>
           </div>
-          <span class="review-name">{{ comment.username }}</span>
-          <button v-if="isCurrentUser(comment.userID)" @click="openEditPopup(comment)" class="edit-btn">Bearbeiten</button>
-          <button v-if="isCurrentUser(comment.userID)" @click="deleteComment(comment.comment_id)" class="delete-btn">Löschen</button>
+          <span class="reviewName">{{ comment.username }}</span>
+          <button
+            v-if="isCurrentUser(comment.userID)"
+            @click="openEditPopup(comment)"
+            class="edit-btn"
+          >
+            Bearbeiten
+          </button>
+          <button
+            v-if="isCurrentUser(comment.userID)"
+            @click="deleteComment(comment.comment_id)"
+            class="delete-btn"
+          >
+            Löschen
+          </button>
         </div>
         <div class="review-text">{{ comment.commentText }}</div>
       </div>
@@ -55,27 +71,27 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
-import { ref } from 'vue';
+import { useStore } from "vuex";
+import { ref } from "vue";
 
 defineProps({
   comments: {
     type: Array,
-    required: true
+    required: true,
   },
 });
 
-const emit = defineEmits(['commentUpdated', 'commentDeleted']);
+const emit = defineEmits(["commentUpdated", "commentDeleted"]);
 
 const store = useStore();
 let editedComment = null;
 const editPopupVisible = ref(false);
-const editedCommentText = ref('');
+const editedCommentText = ref("");
 const editedStarRating = ref(0);
 let editedCommentID = 0;
 
 const isCurrentUser = (userID) => {
-  const currentUserID = localStorage.getItem('userId');
+  const currentUserID = localStorage.getItem("userId");
   return userID == currentUserID;
 };
 
@@ -93,39 +109,56 @@ const closeEditPopup = () => {
 
 const saveEditedComment = async () => {
   if (editedComment) {
-    let userId = localStorage.getItem('userId');
+    let userId = localStorage.getItem("userId");
     let commentID = editedCommentID;
     let commentText = editedCommentText.value;
     let starRating = editedStarRating.value;
 
     try {
-      await store.dispatch('updateComment', { userID: userId, commentID, commentText, starRating });
-      emit('commentUpdated');
+      await store.dispatch("updateComment", {
+        userID: userId,
+        commentID,
+        commentText,
+        starRating,
+      });
+      emit("commentUpdated");
       editPopupVisible.value = false;
     } catch (error) {
-      console.error('Fehler beim Aktualisieren des Kommentars:', error);
+      console.error("Fehler beim Aktualisieren des Kommentre", error);
     }
   }
 };
 
 const deleteComment = async (commentID) => {
-  const currentUserID = localStorage.getItem('userId');
+  const currentUserID = localStorage.getItem("userId");
   if (isCurrentUser(currentUserID)) {
-    await store.dispatch('deleteComment', { comment_id: commentID, userID: currentUserID });
-    emit('commentDeleted');
+    await store.dispatch("deleteComment", {
+      comment_id: commentID,
+      userID: currentUserID,
+    });
+    emit("commentDeleted");
   } else {
-    console.error('Nur Autoren des Kommentars können löschen.');
+    console.error("Nur Autoren des Kommentars können löschen.");
   }
 };
 
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  return new Date(dateString).toLocaleDateString('de-DE', options);
+  const options = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+  return new Date(dateString).toLocaleDateString("de-DE", options);
 };
 </script>
 
 <style lang="scss" scoped>
-.reviews-container {
+.container {
+  margin-top: 100px;
+}
+.reviewsContainer {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -141,18 +174,18 @@ const formatDate = (dateString) => {
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  .review-header {
+  .reviewHeader {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 
-    .review-date {
+    .reviewDate {
       margin-right: auto;
       font-weight: bold;
       color: #555;
     }
 
-    .review-stars {
+    .reviewStars {
       margin-right: 10px;
 
       i {
@@ -161,15 +194,23 @@ const formatDate = (dateString) => {
       }
     }
 
-    .review-name {
+    .reviewName {
       margin-left: 10px;
       font-weight: bold;
       color: #333;
     }
 
-    .edit-btn,
+    .edit-btn {
+      background-color: #40811b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
     .delete-btn {
-      background-color: #007bff;
+      background-color: #b11500;
       color: white;
       border: none;
       border-radius: 5px;

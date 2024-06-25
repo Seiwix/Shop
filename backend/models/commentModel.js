@@ -18,7 +18,7 @@ class Commants {
                 this.comment_id = Number(result.insertId);
                 return "Bewertung erfolgreich gespeichert";
             } else {
-                throw new Error('Bewertung konnte nicht gespeichert werden');
+                throw new Error('Bewertnug konnte nicht gespeichert werden');
             }
         } catch (error) {
             throw new Error(`Fehler beim Speichern der Bewertung: ${error}`);

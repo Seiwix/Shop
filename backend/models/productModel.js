@@ -13,12 +13,12 @@ class Product {
     async save() {
         try {
             const db = await pool.getConnection();
-            console.log("test"+this.stockQuantity,this.imageUrl)
-            await db.query('INSERT INTO products (name, description, price, stockQuantity, imageUrl) VALUES (?, ?, ?, ?, ?)', [this.name, this.description, this.price, this.stockQuantity, this.imageUrl]);
+            await db.query('INSERT INTO products (name, description, price, stockQuantity, imageUrl) VALUES (?, ?, ?, ?, ?)', 
+                [this.name, this.description, this.price, this.stockQuantity, this.imageUrl]);
             db.release();
-            return  'Produkt wurde hinzugefügt'+ this.stockQuantity,this.imageUrl ;
+            return  'Produkt wurde gespeichert'+ this.stockQuantity,this.imageUrl ;
         } catch (error) {
-            throw new Error(`Fehler beim Hinzufügen eines Produktes: ${error}`);
+            throw new Error(`Fehler beim  speichern  des Produktes: ${error}`);
         }
     }
 

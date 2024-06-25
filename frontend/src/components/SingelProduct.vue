@@ -6,26 +6,24 @@
       </article>
       <article class="productDetails">
         <h2>{{ product.name }}</h2>
-        <div class="rating">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="far fa-star"></i>
-          <a>(200)</a>
-        </div>
+        <div class="rating"></div>
         <p>{{ product.description }}</p>
-        <p>{{ product.price }}</p>
-        <label for="anzahl">Verfügbare Anzahl: {{ product.stockQuantity }}</label>
-        <select class="quantity" name="quantity" v-model="selectedQuantity">
+        <p>{{ product.price }} €</p>
+        <label for="NumberOf"
+          >Verfügbare Anzahl: {{ product.stockQuantity }}</label
+        >
+        <select
+          class="quantity"
+          name="quantity"
+          v-model="selectedQuantity"
+          @change="clearErrorMessage"
+        >
           <option v-for="qty in availableQuantities" :key="qty" :value="qty">
             {{ qty }}
           </option>
         </select>
         <button @click="addToCart">In den Warenkorb</button>
-        <p v-if="selectedQuantity > product.stockQuantity">
-          Die gewählte Menge überschreitet die verfügbare Menge!
-        </p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </article>
     </section>
   </div>
@@ -33,9 +31,8 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
-// Define props directly without importing defineProps
 const props = defineProps({
   product: {
     type: Object,
@@ -50,9 +47,12 @@ const availableQuantities = Array.from(
   (_, index) => index + 1
 );
 
+const errorMessage = computed(() => store.getters.errorMessage);
+
 const addToCart = () => {
   if (selectedQuantity.value <= props.product.stockQuantity) {
     const { id, name, price, imageUrl, stockQuantity } = props.product;
+
     const cartItem = {
       id,
       name,
@@ -61,13 +61,31 @@ const addToCart = () => {
       quantity: selectedQuantity.value,
       stockQuantity,
     };
+
     store.dispatch("addCartItem", cartItem);
   } else {
     console.log("Die gewählte Menge ist nicht verfügbar");
   }
 };
-</script>
+const clearErrorMessage = () => {
+  store.dispatch("clearErrorMessage");
+};
 
+watch(selectedQuantity, () => {
+  if (selectedQuantity.value > props.product.stockQuantity) {
+    store.commit(
+      "setErrorMessage",
+      "Die gewählte Menge überschreitet die verfügbare Menge!"
+    );
+  } else {
+    clearErrorMessage();
+  }
+});
+
+onMounted(() => {
+  clearErrorMessage();
+});
+</script>
 <style scoped lang="scss">
 section {
   margin: 50px auto;
@@ -156,15 +174,15 @@ section {
       align-self: center;
       padding: 10px 20px;
       font-size: 1rem;
-      color: #fff;
-      background-color: #007bff;
+      color: black;
+      background-color: goldenrod;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #0056b3;
+        background-color: gold;
       }
     }
   }

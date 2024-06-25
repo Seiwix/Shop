@@ -17,7 +17,9 @@ const getters = {
 };
 
 const actions = {
-  async login({ commit }, credentials) {
+  async login({
+    commit
+  }, credentials) {
     try {
       const response = await fetch('http://localhost:3000/api/user/login', {
         method: 'POST',
@@ -29,19 +31,27 @@ const actions = {
       const data = await response.json();
       if (response.ok) {
         const decodedToken = jwt_decode(data.token);
-        commit('setUserDetails', { token: data.token, id: decodedToken.id, role: decodedToken.role });
+        commit('setUserDetails', {
+          token: data.token,
+          id: decodedToken.id,
+          role: decodedToken.role
+        });
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      console.error('Login fehlgeschlagen:', error);
+      console.log('Login fehlgeschlagen', );
       throw error;
     }
   },
-  logout({ commit }) {
+  logout({
+    commit
+  }) {
     commit('clearUserData');
   },
-  async register({ commit }, userData) {
+  async register({
+    commit
+  }, userData) {
     try {
       const response = await fetch('http://localhost:3000/api/user/register', {
         method: 'POST',
@@ -53,7 +63,11 @@ const actions = {
       const data = await response.json();
       if (response.ok) {
         const decodedToken = jwt_decode(data.token);
-        commit('setUserDetails', { token: data.token, id: decodedToken.id, role: decodedToken.role });
+        commit('setUserDetails', {
+          token: data.token,
+          id: decodedToken.id,
+          role: decodedToken.role
+        });
       } else {
         throw new Error(data.message);
       }
@@ -65,8 +79,13 @@ const actions = {
 };
 
 const mutations = {
-  setUserDetails(state, { token, id, role }) {
+  setUserDetails(state, {
+    token,
+    id,
+    role
+  }) {
     state.token = token;
+
     state.userId = id;
     state.userRole = role;
     localStorage.setItem('jwtToken', token);

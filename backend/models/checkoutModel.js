@@ -28,19 +28,27 @@ class Checkout {
         }
     }
     
-
-    static async getById(checkoutId) {
+    static async getByUserId(userId) {
         try {
             const db = await pool.getConnection();
-            const data = await db.query('SELECT * FROM Checkouts WHERE checkout_id = ?', [checkoutId]);
+            const data = await db.query('SELECT * FROM Checkouts WHERE userID = ?', [userId]);
             db.release();
             if (!data.length) {
-                throw new Error('Checkout wurde nicht gefunden');
+                throw new Error('Keine Checkouts für diesen Benutzer gefunden');
             }
-            const { checkout_id, user_id, first_name, last_name, address, city, postal_code, total, created_at } = data[0];
-            return new Checkout(checkout_id, user_id, first_name, last_name, address, city, postal_code, total, created_at);
+            return data.map(item => new Checkout(
+                item.checkoutID,
+                item.userID,
+                item.firstName,
+                item.lastName,
+                item.address,
+                item.city,
+                item.zip,
+                item.total,
+                item.created_at
+            ));
         } catch (error) {
-            throw new Error(`Fehler beim Abrufen des Checkouts: ${error}`);
+            throw new Error(`Fehler beim Abrufen der Checkouts für diesen Benutzer: ${error}`);
         }
     }
     static async getAll() {
@@ -63,7 +71,7 @@ class Checkout {
                 item.created_at
             ));
         } catch (error) {
-            throw new Error(`Fehler beim Abrufen der Checkouts: ${error}`);
+            throw new Error(`Fehler beim Abrufen der Chackouts: ${error}`);
         }
     }
 }

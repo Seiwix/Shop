@@ -1,18 +1,18 @@
 <template>
   <div>
     <label for="name">Vorname</label>
-    <input type="text" :value="firstName" @input="updateFirstName($event.target.value)" required />
+    <input type="text" :v-model="firstName" @input="updateFirstName($event.target.value)" required />
     <label for="name">Nachname</label>
-    <input type="text"  :value="lastName" @input="updateLastName($event.target.value)" required />
+    <input type="text"  :v-model="lastName" @input="updateLastName($event.target.value)" required />
 
     <label for="street">Straße</label>
-    <input type="text"  :value="street" @input="updateStreet($event.target.value)" required />
+    <input type="text"  :v-model="street" @input="updateStreet($event.target.value)" required />
 
     <label for="city">Stadt</label>
-    <input type="text"  :value="city" @input="updateCity($event.target.value)" required />
+    <input type="text"  :v-model="city" @input="updateCity($event.target.value)" required />
 
     <label for="zip">PLZ</label>
-    <input type="text"  :value="zip" @input="updateZip($event.target.value)" required />
+    <input type="text"  :v-model="zip" @input="updateZip($event.target.value)" required />
   </div>
 </template>
 

@@ -1,13 +1,13 @@
 <template>
   <div class="card">
-    <section class="warenkorb">
-      <h1 class="warenkorb-titel">Warenkorb</h1>
+    <section >
+      <h1>Warenkorb</h1>
       <ShowCart :cartItems="cartItems" @removeCartItem="removeItemFromCart" />
       <div class="sum">
-        <span>Gesamtsumme:</span>
-        <span>{{ totalPrice }}€</span>
+        <span class="price">Gesamtsumme:</span>
+        <span class="price">{{ totalPrice }}€</span>
       </div>
-      <router-link :to="'/checkout/'">
+      <router-link class="ToCheckout" :to="'/checkout/'">
         <button>Bezahlen</button>
       </router-link>
     </section>
@@ -52,17 +52,25 @@ section {
     padding-top: 10px;
     font-weight: bold;
   }
+  .ToCheckout
+  {
+    text-decoration: none;
+  }
+  .price{
+    font-size: 20px;
+  }
   button {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: goldenrod;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
     margin-top: 20px;
+    text-decoration: none;
   }
 }
 </style>

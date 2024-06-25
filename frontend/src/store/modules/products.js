@@ -5,16 +5,18 @@ const state = {
 
 const mutations = {
   setProducts(state, payload) {
+
     state.products = payload;
   },
   setSingleProduct(state, payload) {
     state.singleProduct = payload;
+
   },
   deleteProduct(state, productId) {
     state.products = state.products.filter(product => product.id !== productId);
   },
   updateProduct(state, updatedProduct) {
-    const index = state.products.findIndex(product => product.id === updatedProduct.id);
+    const index = state.products.findIndex(product => product.id  === updatedProduct.id);
     if (index !== -1) {
       state.products.splice(index, 1, updatedProduct);
     }
@@ -33,9 +35,9 @@ const actions = {
       const {
         products
       } = await response.json();
-      commit('setProducts', products);
+      commit('setProducts',  products);
     } catch (error) {
-      console.error('Error beim fetchen des Produktes:', error);
+      console.error('Error beim fetchen des produktes', error);
     }
   },
   async fetchSingleProduct({
@@ -46,7 +48,7 @@ const actions = {
       const {
         product
       } = await response.json();
-      commit('setSingleProduct', product);
+      commit('setSingleProduct',  product);
     } catch (error) {
       console.error('Error fetchen von SingleProduct:', error);
     }
@@ -57,6 +59,9 @@ const actions = {
     try {
       const response = await fetch('http://localhost:3000/api/products', {
         method: 'POST',
+        headers: {
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
+        },
         body: formData,
       });
 
@@ -67,7 +72,7 @@ const actions = {
         throw new Error('Fehler beim hinzufügen von Produkt');
       }
     } catch (error) {
-      console.error('Fehler beim hinzufügen von Produkt:', error);
+      console.error( error);
     }
   },
   async updateProductWithoutImage({
@@ -77,7 +82,8 @@ const actions = {
       const response = await fetch(`http://localhost:3000/api/products/${product.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
         },
         body: JSON.stringify(product)
       });
@@ -89,7 +95,7 @@ const actions = {
         throw new Error('Fehler beim Updaten eines Produktes');
       }
     } catch (error) {
-      console.error('Fehler beim Updaten des Produktes', error);
+      console.error( error);
     }
   },
   async updateProductWithImage({
@@ -101,6 +107,9 @@ const actions = {
     try {
       const response = await fetch(`http://localhost:3000/api/products/${id}`, {
         method: 'PUT',
+        headers: {
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
+        },
         body: formData,
       });
 
@@ -111,14 +120,18 @@ const actions = {
         throw new Error('Fehler beim Updaten des Produktes');
       }
     } catch (error) {
-      console.error('Fehler beim Updaten des Produktes:', error);
+      console.error( error);
     }
   },
   async deleteProduct({
     commit
   }, productId) {
     try {
+      console.log(productId);
       const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+        headers: {
+          'Authorization': `${localStorage.getItem('jwtToken')}`,
+        },
         method: 'DELETE',
       });
 
@@ -128,7 +141,7 @@ const actions = {
         throw new Error('Fehler beim löschen eines Produktes');
       }
     } catch (error) {
-      console.error('Fehler beim löschen eines Produktes:', error);
+      console.error( error);
     }
   }
 };

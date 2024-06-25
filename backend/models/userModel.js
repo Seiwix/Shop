@@ -45,11 +45,11 @@ class User {
                 const user = result[0];
                 console.log(this.password);
                 const isPasswordValid = await bcrypt.compare(this.password, user.password);
-                console.log(isPasswordValid )
+                console.log(isPasswordValid)
                 if (isPasswordValid) {
-                    
+
                     const roleResult = await db.query('SELECT role FROM users WHERE userID = ?', [user.userID]);
-                    db.release(); 
+                    db.release();
                     const userRole = roleResult && roleResult.length > 0 ? roleResult[0].role : 'user'; // Default role if not found
 
                     // Generate JWT token with user ID and role
@@ -71,7 +71,7 @@ class User {
 
     }
 
-    async generateAuthToken(id,role) {
+    async generateAuthToken(id, role) {
         console.log(id);
         const token = jwt.sign({
             id: id,

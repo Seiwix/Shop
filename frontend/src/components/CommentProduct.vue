@@ -40,8 +40,7 @@ import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
-
-const emit = defineEmits(['commentAdded']);
+const emit = defineEmits(["commentAdded"]);
 
 const store = useStore();
 const route = useRoute();

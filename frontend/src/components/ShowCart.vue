@@ -2,19 +2,17 @@
   <div>
     <article v-for="(item, index) in cartItems" :key="index">
       <img :src="item.imageUrl" :alt="item.name" />
-      <div>
-        <h3>{{ item.name }}</h3>
-        <p>
-          <select class="dropdown" v-model="item.quantity">
-            <option
-              v-for="quantity in getAvailableQuantities(item)"
-              :key="quantity"
-              :value="quantity"
-            >
-              {{ quantity }}
-            </option>
-          </select>
-        </p>
+      <h3>{{ item.name }}</h3>
+      <div class="actions">
+        <select class="dropdown" v-model="item.quantity">
+          <option
+            v-for="quantity in getAvailableQuantities(item)"
+            :key="quantity"
+            :value="quantity"
+          >
+            {{ quantity }}
+          </option>
+        </select>
         <p>{{ item.price }}€</p>
         <button @click="removeFromCart(item)">Löschen</button>
       </div>
@@ -24,14 +22,14 @@
 
 <script setup>
 
- defineProps({
+defineProps({
   cartItems: {
     type: Array,
     required: true,
   },
 });
 
-const emit = defineEmits('removeCartItem');
+const emit = defineEmits(['removeCartItem']);
 
 const getAvailableQuantities = (item) => {
   return Array.from(
@@ -44,10 +42,10 @@ const removeFromCart = (item) => {
   emit("removeCartItem", item);
 };
 </script>
+
 <style lang="scss" scoped>
 article {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   border-bottom: 1px solid #ccc;
@@ -58,12 +56,36 @@ article {
     max-height: 100px;
     margin-right: 20px;
   }
-  .dropdown {
-    width: 80px;
-    font-size: 16px;
+
+  h3 {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
   }
-  button {
-    background-color: red;
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    .dropdown {
+      width: 80px;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   }
 }
 </style>
+

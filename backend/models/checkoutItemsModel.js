@@ -31,7 +31,7 @@ class CheckoutItem {
             if (!data.length) {
                 throw new Error('Keine Checkout-Items gefunden');
             }
-            return data.map(item => new CheckoutItem(item.checkout_item_id, item.checkout_id, item.product_id, item.quantity));
+            return data.map(item => new CheckoutItem(item.checkoutItemID, item.checkoutID, item.productID, item.quantity));
         } catch (error) {
             throw new Error(`Fehler beim Abrufen der Checkout-Items: ${error}`);
         }
